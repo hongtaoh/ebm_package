@@ -15,8 +15,671 @@ import scipy.stats as stats
 from scipy.stats import kendalltau
 import re
 plt.rcParams['font.family'] = 'DejaVu Sans'
-from typing import List, Optional, Tuple, Dict
+from typing import List, Optional
 
+def generate_data_from_ebm(
+    n_participants: int,
+    S_ordering: List[str],
+    real_theta_phi_file: str,
+    healthy_ratio: float,
+    output_dir: str,
+    seed: Optional[int] = None
+):
+    """
+    Simulate an Event-Based Model (EBM) for disease progression.
+
+    Args:
+    n_participants (int): Number of participants.
+    S_ordering (List[str]): Biomarker names ordered according to the order 
+        in which each of them get affected by the disease.
+    real_theta_phi_file (str): Directory of a JSON file which contains 
+        theta and phi values for all biomarkers.
+        See real_theta_phi.json for example format.
+    output_dir (str): Directory where output files will be saved.
+    healthy_ratio (float): Proportion of healthy participants out of n_participants.
+    seed (Optional[int]): Seed for the random number generator for reproducibility.
+
+    Returns:
+    pd.DataFrame: A DataFrame with columns 'participant', "biomarker", 'measurement', 
+        'diseased'.
+    """
+    # Parameter validation
+    assert n_participants > 0, "Number of participants must be greater than 0."
+    assert 0 <= healthy_ratio <= 1, "Healthy ratio must be between 0 and 1."
+
+    # Set the seed for numpy's random number generator
+    rng = np.random.default_rng(seed)
+
+    # Load theta and phi values from the JSON file
+    try:
+        with open(real_theta_phi_file) as f:
+            real_theta_phi = json.load(f)
+    except FileNotFoundError:
+        raise FileNotFoundError(f"File {real_theta_phi} not fount")
+    except json.JSONDecodeError:
+        raise ValueError(f"File {real_theta_phi_file} is not a valid JSON file.")
+
+    n_biomarkers = len(S_ordering)
+    n_stages = n_biomarkers + 1
+
+    n_healthy = int(n_participants * healthy_ratio)
+    n_diseased = int(n_participants - n_healthy)
+
+    # Generate disease stages
+    kjs = np.concatenate((np.zeros(n_healthy, dtype=int), rng.integers(1, n_stages, n_diseased)))
+    # shuffle so that it's not 0s first and then disease stages bur all random
+    rng.shuffle(kjs)
+
+    # Initiate biomarker measurement matrix (J participants x N biomarkers) with None
+    X = np.full((n_participants, n_biomarkers), None, dtype=object)
+
+    # Create distributions for each biomarker
+    theta_dist = {biomarker: stats.norm(
+        real_theta_phi[biomarker]['theta_mean'],
+        real_theta_phi[biomarker]['theta_std']
+    ) for biomarker in S_ordering}
+
+    phi_dist = {biomarker: stats.norm(
+        real_theta_phi[biomarker]['phi_mean'],
+        real_theta_phi[biomarker]['phi_std']
+    ) for biomarker in S_ordering}
+
+    # Populate the matrix with biomarker measurements
+    for j in range(n_participants):
+        for n, biomarker in enumerate(S_ordering):
+            k_j = kjs[j]
+            S_n = n + 1
+
+            # Assign biomarker values based on the participant's disease stage
+            # affected, or not_affected, is regarding the biomarker, not the participant
+            if k_j >= 1:
+                if k_j >= S_n:
+                    # rvs() is affected by np.random()
+                    X[j, n] = (
+                        j, biomarker, theta_dist[biomarker].rvs(random_state=rng), k_j, S_n, 'affected')
+                else:
+                    X[j, n] = (j, biomarker, phi_dist[biomarker].rvs(random_state=rng),
+                               k_j, S_n, 'not_affected')
+            # if the participant is healthy
+            else:
+                X[j, n] = (j, biomarker, phi_dist[biomarker].rvs(random_state=rng),
+                           k_j, S_n, 'not_affected')
+
+    df = pd.DataFrame(X, columns=S_ordering)
+    # make this dataframe wide to long
+    df_long = df.melt(var_name="Biomarker", value_name="Value")
+    data = df_long['Value'].apply(pd.Series)
+    data.columns = ['participant', "biomarker", 'measurement', 'k_j', 'S_n', 'affected_or_not']
+
+    biomarker_name_change_dic = dict(zip(S_ordering, range(1, n_biomarkers + 1)))
+    data['diseased'] = data.apply(lambda row: row.k_j > 0, axis=1)
+    data.drop(['k_j', 'S_n', 'affected_or_not'], axis=1, inplace=True)
+    data['biomarker'] = data.apply(
+        lambda row: f"{row.biomarker} ({biomarker_name_change_dic[row.biomarker]})", axis=1)
+    
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    combination_str = f"{int(healthy_ratio*n_participants)}|{n_participants}"
+    data.to_csv(f'{output_dir}/{combination_str}.csv', index=False)
+    print("Data generation done! Output saved to:", combination_str)
+    return data
+
+def get_theta_phi_for_single_biomarker(data, biomarker, clustering_setup):
+    """To get theta and phi parametesr for a single biomarker 
+    Input:
+        - data: data we have right now, without access to S_n and kj
+        - biomarker: a string of biomarker name
+        - clustering_setup: kmeans_only, hierarchical_clustering, or both
+    Output:
+        mean and std of theta and phi
+    """
+    # two empty clusters to strore measurements
+    clusters = [[] for _ in range(2)]
+
+    # dataframe for this biomarker
+    biomarker_df = data[data['biomarker'] == biomarker].reset_index(drop=True)
+    # reshape to satisfy sklearn requirements
+    measurements = np.array(biomarker_df['measurement']).reshape(-1, 1)
+
+    # dataframe for non-diseased participants
+    healthy_df = biomarker_df[biomarker_df['diseased'] == False]
+    healthy_measurements = np.array(healthy_df['measurement']).reshape(-1, 1)
+
+    # Fit clustering method
+    clustering_result = clustering_setup.fit(measurements)
+
+    if isinstance(clustering_setup, KMeans):
+        predictions = clustering_result.predict(measurements)
+    else:
+        predictions = clustering_result.labels_
+
+    # to store measurements into their cluster
+    for i, prediction in enumerate(predictions):
+        clusters[prediction].append(measurements[i][0])
+
+    # which cluster are healthy participants in
+    healthy_predictions = predictions[healthy_df.index]
+
+    # the mode of the above predictions will be the phi cluster index
+    phi_cluster_idx = mode(healthy_predictions, keepdims=False).mode
+    theta_cluster_idx = 1 - phi_cluster_idx
+    theta_mean, theta_std = np.mean(
+        clusters[theta_cluster_idx]), np.std(clusters[theta_cluster_idx])
+    phi_mean, phi_std = np.mean(clusters[phi_cluster_idx]), np.std(
+        clusters[phi_cluster_idx])
+    return theta_mean, theta_std, phi_mean, phi_std
+
+
+def get_theta_phi_for_single_biomarker_using_kmeans_and_hierarchical_clustering(
+        data, biomarker):
+    """
+    To get theta and phi parameters for a single biomarker using the K-means algorithm.
+    Input:
+        - data: DataFrame containing the data.
+        - biomarker: A string representing the biomarker name.
+        - kmeans_setup: An instance of KMeans from scikit-learn.
+    Output:
+        - Mean and standard deviation of theta and phi.
+    """
+    kmeans_setup = KMeans(n_clusters=2, random_state=0, n_init="auto")
+
+    # two empty clusters to strore measurements
+    clusters = [[] for _ in range(2)]
+
+    # dataframe for this biomarker
+    biomarker_df = data[data['biomarker'] == biomarker].reset_index(drop=True)
+    # you need to make sure each measurment is a np.array before putting it into "fit"
+    measurements = np.array(biomarker_df['measurement']).reshape(-1, 1)
+
+    # dataframe for non-diseased participants
+    healthy_df = biomarker_df[biomarker_df['diseased'] == False]
+    healthy_measurements = np.array(healthy_df['measurement']).reshape(-1, 1)
+
+    # Fit k-means
+    kmeans = kmeans_setup.fit(measurements)
+    predictions = kmeans.predict(measurements)
+
+    # Verify that all healthy participants are in one cluster
+    # which clusters are healthy participants in:
+    healthy_predictions = kmeans.predict(healthy_measurements)
+    # Identify healthy cluster index
+    phi_cluster_idx = mode(healthy_predictions, keepdims=False).mode
+
+    if len(set(healthy_predictions)) > 1:
+        # Reassign clusters using Agglomerative Clustering
+        clustering = AgglomerativeClustering(
+            n_clusters=2).fit(healthy_measurements)
+
+        # Find the dominant cluster for healthy participants
+        phi_cluster_idx = mode(clustering.labels_, keepdims=False).mode
+
+        # Update predictions to ensure all healthy participants are in the dominant cluster
+        updated_predictions = predictions.copy()
+        for i in healthy_df.index:
+            updated_predictions[i] = phi_cluster_idx
+    else:
+        updated_predictions = predictions
+
+    # Identify diseased cluster index
+    theta_cluster_idx = 1 - phi_cluster_idx
+
+    # Store measurements into their cluster
+    for i, prediction in enumerate(updated_predictions):
+        clusters[prediction].append(measurements[i][0])
+
+    # Calculate means and standard deviations
+    theta_mean, theta_std = np.mean(
+        clusters[theta_cluster_idx]), np.std(clusters[theta_cluster_idx])
+    phi_mean, phi_std = np.mean(clusters[phi_cluster_idx]), np.std(
+        clusters[phi_cluster_idx])
+    return theta_mean, theta_std, phi_mean, phi_std
+
+
+def get_theta_phi_estimates(
+    data_we_have,
+    biomarkers,
+    n_clusters,
+    method="kmeans_and_hierarchical_clustering"
+):
+    """
+    Get the DataFrame of theta and phi using the K-means and/or hierarchical clustering 
+    algorithm for all biomarkers.
+    Input:
+        - data_we_have: DataFrame containing the data.
+        - biomarkers: List of biomarkers in string.
+        - n_clusters: Number of clusters (should be 2).
+    Output:
+        - a dictionary where key is biomarker and 
+        value is the means and standard deviations for theta and phi for that biomarker.
+    """
+    kmeans_setup = KMeans(n_clusters, random_state=0, n_init="auto")
+    hierarchical_clustering_setup = AgglomerativeClustering(n_clusters=2)
+    # empty list of dictionaries to store the estimates
+    hashmap_of_means_stds_estimate_dicts = {}
+    for idx, biomarker in enumerate(biomarkers):
+        dic = {'biomarker': biomarker}
+        if method == "kmeans_only":
+            theta_mean, theta_std, phi_mean, phi_std = get_theta_phi_for_single_biomarker(
+                data_we_have, biomarker, kmeans_setup)
+        elif method == "hierarchical_clustering_only":
+            theta_mean, theta_std, phi_mean, phi_std = get_theta_phi_for_single_biomarker(
+                data_we_have, biomarker, hierarchical_clustering_setup)
+        elif method == "kmeans_and_hierarchical_clustering":
+            theta_mean, theta_std, phi_mean, phi_std = get_theta_phi_for_single_biomarker_using_kmeans_and_hierarchical_clustering(
+                data_we_have, biomarker)
+        dic['theta_mean'] = theta_mean
+        dic['theta_std'] = theta_std
+        dic['phi_mean'] = phi_mean
+        dic['phi_std'] = phi_std
+        hashmap_of_means_stds_estimate_dicts[biomarker] = dic
+    return hashmap_of_means_stds_estimate_dicts
+
+
+def fill_up_pdata(pdata, k_j):
+    '''Fill up a single participant's data using k_j; basically add two columns: 
+    k_j and affected
+    Note that this function assumes that pdata already has the S_n column
+
+    Input:
+    - pdata: a dataframe of ten biomarker values for a specific participant 
+    - k_j: a scalar
+    '''
+    data = pdata.copy()
+    data['k_j'] = k_j
+    data['affected'] = data.apply(lambda row: row.k_j >= row.S_n, axis=1)
+    return data
+
+
+def compute_single_measurement_likelihood(theta_phi, biomarker, affected, measurement):
+    '''Computes the likelihood of the measurement value of a single biomarker
+    We know the normal distribution defined by either theta or phi
+    and we know the measurement. This will give us the probability
+    of this given measurement value. 
+
+    input:
+    - theta_phi: the dictionary containing theta and phi values for each biomarker
+    - biomarker: an integer between 0 and 9 
+    - affected: boolean 
+    - measurement: the observed value for a biomarker in a specific participant
+
+    output: a scalar
+    '''
+    # print(biomarker)
+    # print(theta_phi)
+    biomarker_dict = theta_phi[biomarker]
+    mu = biomarker_dict['theta_mean'] if affected else biomarker_dict['phi_mean']
+    std = biomarker_dict['theta_std'] if affected else biomarker_dict['phi_std']
+    var = std**2
+    likelihood = np.exp(-(measurement - mu)**2/(2*var))/np.sqrt(2*np.pi*var)
+    return likelihood
+
+
+def compute_likelihood(pdata, k_j, theta_phi):
+    '''This implementes the formula of https://ebm-book2.vercel.app/distributions.html#known-k-j
+    This function computes the likelihood of seeing this sequence of biomarker values 
+    for a specific participant, assuming that this participant is at stage k_j
+    '''
+    data = fill_up_pdata(pdata, k_j)
+    likelihood = 1
+    for i, row in data.iterrows():
+        biomarker = row['biomarker']
+        measurement = row['measurement']
+        affected = row['affected']
+        likelihood *= compute_single_measurement_likelihood(
+            theta_phi, biomarker, affected, measurement)
+    return likelihood
+
+
+def calculate_soft_kmeans_for_biomarker(
+        data,
+        biomarker,
+        order_dict,
+        n_participants,
+        non_diseased_participants,
+        hashmap_of_normalized_stage_likelihood_dicts,
+        diseased_stages,
+        seed=None
+):
+    """
+    Process soft K-means clustering for a single biomarker.
+
+    Parameters:
+        data (pd.DataFrame): The data containing measurements.
+        biomarker (str): The biomarker to process.
+        order_dict (dict): Dictionary mapping biomarkers to their order.
+        n_participants (int): Number of participants in the study.
+        non_diseased_participants (list): List of non-diseased participants.
+        hashmap_of_normalized_stage_likelihood_dicts (dict): Hash map of 
+            dictionaries containing stage likelihoods for each participant.
+        diseased_stages (list): List of diseased stages.
+        seed (int, optional): Random seed for reproducibility.
+
+    Returns:
+        tuple: Means and standard deviations for affected and non-affected clusters.
+    """
+    if seed is not None:
+        np.random.seed(seed)  # Set random seed for reproducibility
+
+    # DataFrame for this biomarker
+    biomarker_df = data[data['biomarker'] == biomarker].reset_index(drop=True)
+    # Extract measurements
+    measurements = np.array(biomarker_df['measurement'])
+
+    this_biomarker_order = order_dict[biomarker]
+
+    affected_cluster = []
+    non_affected_cluster = []
+
+    for p in range(n_participants):
+        if p in non_diseased_participants:
+            non_affected_cluster.append(measurements[p])
+        else:
+            if this_biomarker_order == 1:
+                affected_cluster.append(measurements[p])
+            else:
+                normalized_stage_likelihood_dict = hashmap_of_normalized_stage_likelihood_dicts[
+                    p]
+                # Calculate probabilities for affected and non-affected states
+                affected_prob = sum(
+                    normalized_stage_likelihood_dict[s] for s in diseased_stages if s >= this_biomarker_order
+                )
+                non_affected_prob = sum(
+                    normalized_stage_likelihood_dict[s] for s in diseased_stages if s < this_biomarker_order
+                )
+                if affected_prob > non_affected_prob:
+                    affected_cluster.append(measurements[p])
+                elif affected_prob < non_affected_prob:
+                    non_affected_cluster.append(measurements[p])
+                else:
+                    # Assign to either cluster randomly if probabilities are equal
+                    if np.random.rand() > 0.5:
+                        affected_cluster.append(measurements[p])
+                    else:
+                        non_affected_cluster.append(measurements[p])
+
+    # Compute means and standard deviations
+    theta_mean = np.mean(affected_cluster) if affected_cluster else np.nan
+    theta_std = np.std(affected_cluster) if affected_cluster else np.nan
+    phi_mean = np.mean(
+        non_affected_cluster) if non_affected_cluster else np.nan
+    phi_std = np.std(non_affected_cluster) if non_affected_cluster else np.nan
+
+    return theta_mean, theta_std, phi_mean, phi_std
+
+def soft_kmeans_theta_phi_estimates(
+        iteration,
+        prior_theta_phi_estimates,
+        data_we_have,
+        biomarkers,
+        order_dict,
+        n_participants,
+        non_diseased_participants,
+        hashmap_of_normalized_stage_likelihood_dicts,
+        diseased_stages,
+        seed=None):
+    """
+    Get the DataFrame of theta and phi using the soft K-means algorithm for all biomarkers.
+
+    Parameters:
+        data_we_have (pd.DataFrame): DataFrame containing the data.
+        biomarkers (list): List of biomarkers in string.
+        order_dict (dict): Dictionary mapping biomarkers to their order.
+        n_participants (int): Number of participants in the study.
+        non_diseased_participants (list): List of non-diseased participants.
+        hashmap_of_normalized_stage_likelihood_dicts (dict): Hash map of dictionaries containing stage likelihoods for each participant.
+        diseased_stages (list): List of diseased stages.
+        seed (int, optional): Random seed for reproducibility.
+
+    Returns:
+        a dictionary containing the means and standard deviations for theta and phi for each biomarker.
+    """
+    # List to store the estimates
+    hashmap_of_means_stds_estimate_dicts = {}
+    for biomarker in biomarkers:
+        dic = {'biomarker': biomarker}
+        prior_theta_phi_estimates_biomarker = prior_theta_phi_estimates[biomarker]
+        theta_mean, theta_std, phi_mean, phi_std = calculate_soft_kmeans_for_biomarker(
+            data_we_have,
+            biomarker,
+            order_dict,
+            n_participants,
+            non_diseased_participants,
+            hashmap_of_normalized_stage_likelihood_dicts,
+            diseased_stages,
+            seed
+        )
+        if theta_std == 0 or math.isnan(theta_std):
+            theta_mean = prior_theta_phi_estimates_biomarker['theta_mean']
+            theta_std = prior_theta_phi_estimates_biomarker['theta_std']
+        if phi_std == 0 or math.isnan(phi_std):
+            phi_mean = prior_theta_phi_estimates_biomarker['phi_mean']
+            phi_std = prior_theta_phi_estimates_biomarker['phi_std']
+        dic['theta_mean'] = theta_mean
+        dic['theta_std'] = theta_std
+        dic['phi_mean'] = phi_mean
+        dic['phi_std'] = phi_std
+        hashmap_of_means_stds_estimate_dicts[biomarker] = dic
+    return hashmap_of_means_stds_estimate_dicts
+
+
+"""
+If soft kmeans, no matter uniform prior on kjs or not, I always need to update hashmap of dicts
+    This is because, even if when we do not have uniform prior, we don't need normalized_stage_likelihood_dict
+    to calculate the weighted average, we still need it to calculate soft kmeans
+If kmeans only, if with uniform prior, we don't need normalized_stage_likelihood_dict to calculate 
+    weighted average;
+    but we do need to calculate normalized_stage_likelihood_dict when without uniform prior 
+"""
+
+
+def calculate_all_participant_ln_likelihood_and_update_hashmap(
+        iteration,
+        data_we_have,
+        current_order_dict,
+        n_participants,
+        non_diseased_participant_ids,
+        theta_phi_estimates,
+        diseased_stages,
+):
+    data = data_we_have.copy()
+    data['S_n'] = data.apply(
+        lambda row: current_order_dict[row['biomarker']], axis=1)
+    all_participant_ln_likelihood = 0
+    # key is participant id
+    # value is normalized_stage_likelihood_dict
+    hashmap_of_normalized_stage_likelihood_dicts = {}
+    for p in range(n_participants):
+        pdata = data[data.participant == p].reset_index(drop=True)
+        if p in non_diseased_participant_ids:
+            this_participant_likelihood = compute_likelihood(
+                pdata, k_j=0, theta_phi=theta_phi_estimates)
+            this_participant_ln_likelihood = np.log(
+                this_participant_likelihood + 1e-10)
+        else:
+            normalized_stage_likelihood_dict = None
+            # initiaze stage_likelihood
+            stage_likelihood_dict = {}
+            for k_j in diseased_stages:
+                kj_likelihood = compute_likelihood(
+                    pdata, k_j, theta_phi_estimates)
+                # update each stage likelihood for this participant
+                stage_likelihood_dict[k_j] = kj_likelihood
+            # Add a small epsilon to avoid division by zero
+            likelihood_sum = sum(stage_likelihood_dict.values())
+            epsilon = 1e-10
+            if likelihood_sum == 0:
+                print("Invalid likelihood_sum: zero encountered.")
+                likelihood_sum = epsilon  # Handle the case accordingly
+            normalized_stage_likelihood = [
+                l/likelihood_sum for l in stage_likelihood_dict.values()]
+            normalized_stage_likelihood_dict = dict(
+                zip(diseased_stages, normalized_stage_likelihood))
+            hashmap_of_normalized_stage_likelihood_dicts[p] = normalized_stage_likelihood_dict
+
+            # calculate weighted average
+            this_participant_likelihood = weighted_average_likelihood(
+                likelihood_sum)
+            this_participant_ln_likelihood = np.log(
+                this_participant_likelihood + 1e-10)
+        all_participant_ln_likelihood += this_participant_ln_likelihood
+    return all_participant_ln_likelihood, hashmap_of_normalized_stage_likelihood_dicts
+
+
+def weighted_average_likelihood(
+    likelihood_sum,
+):
+    """using weighted average likelihood
+    https://ebm-book2.vercel.app/distributions.html#unknown-k-j
+    Note that we have uniform prior on kj
+    """
+    return np.mean(likelihood_sum)
+
+
+def metropolis_hastings_soft_kmeans(
+    data_we_have,
+    iterations,
+    n_shuffle,
+    log_folder_name,
+):
+    '''Implement the metropolis-hastings algorithm
+    Inputs: 
+        - data: data_we_have
+        - iterations: number of iterations
+        - log_folder_name: the folder where log files locate
+
+    Outputs:
+        - best_order: a numpy array
+        - best_likelihood: a scalar 
+    '''
+    n_participants = len(data_we_have.participant.unique())
+    biomarkers = data_we_have.biomarker.unique()
+    n_biomarkers = len(biomarkers)
+    n_stages = n_biomarkers + 1
+    non_diseased_participant_ids = data_we_have.loc[
+        data_we_have.diseased == False].participant.unique()
+    diseased_stages = np.arange(start=1, stop=n_stages, step=1)
+    # obtain the iniial theta and phi estimates
+    prior_theta_phi_estimates = get_theta_phi_estimates(
+        data_we_have,
+        biomarkers,
+        n_clusters=2,
+        method="kmeans_only"
+    )
+    theta_phi_estimates = prior_theta_phi_estimates.copy()
+
+    # initialize empty lists
+    all_order_dicts = []
+    all_current_accepted_likelihoods = []
+    acceptance_count = 0
+    all_current_acceptance_ratios = []
+    all_current_accepted_order_dicts = []
+    terminal_output_strings = []
+    hashmaps_of_theta_phi_estimates = {}
+    hashmap_of_estimated_theta_phi_dicts = {}
+
+    current_accepted_order = np.random.permutation(np.arange(1, n_stages))
+    current_accepted_order_dict = dict(zip(biomarkers, current_accepted_order))
+    current_accepted_likelihood = -np.inf
+
+    for _ in range(iterations):
+        new_order = current_accepted_order.copy()
+        # random.shuffle(new_order)
+        shuffle_order(new_order, n_shuffle)
+        current_order_dict = dict(zip(biomarkers, new_order))
+        all_participant_ln_likelihood, \
+            hashmap_of_normalized_stage_likelihood_dicts = calculate_all_participant_ln_likelihood_and_update_hashmap(
+                _,
+                data_we_have,
+                current_order_dict,
+                n_participants,
+                non_diseased_participant_ids,
+                theta_phi_estimates,
+                diseased_stages,
+            )
+
+        # Now, update theta_phi_estimates using soft kmeans
+        # based on the updated hashmap of normalized stage likelihood dicts
+        theta_phi_estimates = soft_kmeans_theta_phi_estimates(
+            _,
+            prior_theta_phi_estimates,
+            data_we_have,
+            biomarkers,
+            current_order_dict,
+            n_participants,
+            non_diseased_participant_ids,
+            hashmap_of_normalized_stage_likelihood_dicts,
+            diseased_stages,
+            seed=None,
+        )
+
+        # Log-Sum-Exp Trick
+        max_likelihood = max(all_participant_ln_likelihood,
+                             current_accepted_likelihood)
+        prob_of_accepting_new_order = np.exp(
+            (all_participant_ln_likelihood - max_likelihood) -
+            (current_accepted_likelihood - max_likelihood)
+        )
+
+        # prob_of_accepting_new_order = np.exp(
+        #     all_participant_ln_likelihood - current_accepted_likelihood)
+
+        # it will definitly update at the first iteration
+        if np.random.rand() < prob_of_accepting_new_order:
+            acceptance_count += 1
+            current_accepted_order = new_order
+            current_accepted_likelihood = all_participant_ln_likelihood
+            current_accepted_order_dict = current_order_dict
+
+        all_current_accepted_likelihoods.append(current_accepted_likelihood)
+        acceptance_ratio = acceptance_count*100/(_+1)
+        all_current_acceptance_ratios.append(acceptance_ratio)
+        all_order_dicts.append(current_order_dict)
+        all_current_accepted_order_dicts.append(current_accepted_order_dict)
+        hashmaps_of_theta_phi_estimates[_] = theta_phi_estimates
+        # update theta_phi_dic
+        hashmap_of_estimated_theta_phi_dicts[_] = theta_phi_estimates
+
+        if (_+1) % 10 == 0:
+            formatted_string = (
+                f"iteration {_ + 1} done, "
+                f"current accepted likelihood: {current_accepted_likelihood}, "
+                f"current acceptance ratio is {acceptance_ratio:.2f} %, "
+                f"current accepted order is {current_accepted_order_dict}, "
+            )
+            terminal_output_strings.append(formatted_string)
+            print(formatted_string)
+
+    final_acceptance_ratio = acceptance_count/iterations
+
+    save_output_strings(log_folder_name, terminal_output_strings)
+
+    save_all_dicts(all_order_dicts, log_folder_name, "all_order")
+    save_all_dicts(
+        all_current_accepted_order_dicts,
+        log_folder_name,
+        "all_current_accepted_order_dicts")
+    save_all_current_accepted(
+        all_current_accepted_likelihoods,
+        "all_current_accepted_likelihoods",
+        log_folder_name)
+    save_all_current_accepted(
+        all_current_acceptance_ratios,
+        "all_current_acceptance_ratios",
+        log_folder_name)
+    # save hashmap_of_estimated_theta_and_phi_dicts
+    with open(f'{log_folder_name}/hashmap_of_estimated_theta_phi_dicts.json', 'w') as fp:
+        json.dump(hashmap_of_estimated_theta_phi_dicts, fp)
+    print("done!")
+    return (
+        current_accepted_order_dict,
+        all_order_dicts,
+        all_current_accepted_order_dicts,
+        all_current_accepted_likelihoods,
+        all_current_acceptance_ratios,
+        final_acceptance_ratio,
+        hashmap_of_estimated_theta_phi_dicts,
+    )
 
 def metropolis_hastings_kmeans(
     data_we_have,
@@ -44,6 +707,8 @@ def metropolis_hastings_kmeans(
     theta_phi_kmeans = get_theta_phi_estimates(
         data_we_have,
         biomarkers,
+        n_clusters=2,
+        method="kmeans_only"
     )
 
     all_order_dicts = []
@@ -172,6 +837,52 @@ def obtain_most_likely_order_dic(all_current_accepted_order_dicts, burn_in, thin
                 f"Could not assign a unique stage for biomarker {biomarker}.")
     return dic
 
+# def output_likelihood_comparison(
+#         most_likely_order_dic,
+#         data_we_have,
+#         n_participants,
+#         non_diseased_participant_ids,
+#         theta_phi_kmeans,
+#         diseased_stages,
+#         log_folder_name,
+#         doc_strings,
+#         ):
+#     """This is to output a text file comparing the likelihood of the most likely ordering
+#     and the real ordering
+#     """
+#     real_order_dic = dict(zip(most_likely_order_dic.keys(), range(1, len(most_likely_order_dic) + 1)))
+#     output_filename = f"{log_folder_name}/compare_most_likely_and_true_ordering.txt"
+#     with open(output_filename, 'w') as file:
+#         if most_likely_order_dic == real_order_dic:
+#             file.write("The most likely ordering is the true ordering")
+#         else:
+#             file.write("The most likely ordering is different from the true ordering. \n")
+#             most_likely_ln_likelihood, hashmap = calculate_all_participant_ln_likelihood_and_update_hashmap(
+#                 "iteration",
+#                 data_we_have,
+#                 most_likely_order_dic,
+#                 n_participants,
+#                 non_diseased_participant_ids,
+#                 theta_phi_kmeans,
+#                 diseased_stages,
+#             )
+#             real_order_ln_likelihood, hashmap = calculate_all_participant_ln_likelihood_and_update_hashmap(
+#                 "iteration",
+#                 data_we_have,
+#                 real_order_dic,
+#                 n_participants,
+#                 non_diseased_participant_ids,
+#                 theta_phi_kmeans,
+#                 diseased_stages,
+#             )
+#             file.write(f"Likelihood of the most likely ordering ({most_likely_order_dic.values()}): {most_likely_ln_likelihood}. \n")
+#             file.write(f"Likelihood of the true ordering ({real_order}): {real_order_ln_likelihood}.")
+
+#         if doc_strings:
+#             for string in doc_strings:
+#                 file.write(string)
+
+
 def estimate_params_exact(m0, n0, s0_sq, v0, data):
     '''This is to estimate means and vars based on conjugate priors
     Inputs:
@@ -273,6 +984,18 @@ def add_kj_and_affected_and_modify_diseased(data, participant_stages, n_particip
     data['diseased'] = data.apply(lambda row: row.k_j > 0, axis=1)
     data['affected'] = data.apply(lambda row: row.k_j >= row.S_n, axis=1)
     return data
+
+
+def shuffle_order(arr, n_shuffle):
+    # randomly choose three indices
+    indices = random.sample(range(len(arr)), n_shuffle)
+    # obtain the elements represented by these three random indices and shuffle these elements
+    selected_elements = [arr[i] for i in indices]
+    random.shuffle(selected_elements)
+    # shuffle the original arr
+    for i, index in enumerate(indices):
+        arr[index] = selected_elements[i]
+
 
 def compute_all_participant_ln_likelihood_and_update_participant_stages(
         n_participants,
@@ -398,6 +1121,8 @@ def metropolis_hastings_with_conjugate_priors(
         theta_phi_kmeans = get_theta_phi_estimates(
             data_we_have,
             biomarkers,
+            n_clusters=2,
+            method="kmeans_only"
         )
         estimated_theta_phi = get_theta_phi_conjugate_priors(
             biomarkers, data, theta_phi_kmeans)
@@ -492,6 +1217,20 @@ def metropolis_hastings_with_conjugate_priors(
     )
 
 
+def save_output_strings(
+        log_folder_name,
+        terminal_output_strings
+):
+    # Check if the directory exists
+    if not os.path.exists(log_folder_name):
+        # Create the directory if it does not exist
+        os.makedirs(log_folder_name)
+    terminal_output_filename = f"{log_folder_name}/terminal_output.txt"
+    with open(terminal_output_filename, 'w') as file:
+        for result in terminal_output_strings:
+            file.write(result + '\n')
+
+
 def get_biomarker_stage_probability(df, burn_in, thining):
     """filter through all_dicts using burn_in and thining 
     and for each biomarker, get probability of being in each possible stage
@@ -564,6 +1303,7 @@ def save_heatmap(all_dicts, burn_in, thining, folder_name, file_name, title):
     # plt.savefig(f'{file_name}.pdf')
     plt.close()
 
+
 def sampled_row_based_on_column_frequencies(a):
     """for ndarray, sample one element in each col based on elements' frequencies
     input:
@@ -579,6 +1319,54 @@ def sampled_row_based_on_column_frequencies(a):
         sampled_element = np.random.choice(unique_elements, p=probs)
         sampled_row.append(sampled_element)
     return np.array(sampled_row)
+
+
+def save_all_dicts(all_dicts, log_folder_name, file_name):
+    """Save all_dicts into a CSV file within a specified directory.
+
+    If the directory does not exist, it will be created.
+    """
+    # Check if the directory exists
+    if not os.path.exists(log_folder_name):
+        # Create the directory if it does not exist
+        os.makedirs(log_folder_name)
+
+    # Convert the list of dictionaries to a DataFrame
+    df = pd.DataFrame(all_dicts)
+
+    # Add an 'iteration' column
+    df['iteration'] = np.arange(start=1, stop=len(df) + 1, step=1)
+
+    # Set 'iteration' as the index
+    df.set_index("iteration", inplace=True)
+
+    # Save the DataFrame to a CSV file
+    df.to_csv(f"{log_folder_name}/{file_name}.csv", index=True)
+
+
+def save_all_current_accepted(var, var_name, log_folder_name):
+    """save all_current_order_dicts, all_current_ikelihoods, 
+    and all_current_acceptance_ratios
+    """
+    # Check if the directory exists
+    if not os.path.exists(log_folder_name):
+        # Create the directory if it does not exist
+        os.makedirs(log_folder_name)
+    x = np.arange(start=1, stop=len(var) + 1, step=1)
+    df = pd.DataFrame({"iteration": x, var_name: var})
+    df = df.set_index('iteration')
+    df.to_csv(f"{log_folder_name}/{var_name}.csv", index=True)
+
+
+def save_all_current_participant_stages(var, var_name, log_folder_name):
+    # Check if the directory exists
+    if not os.path.exists(log_folder_name):
+        # Create the directory if it does not exist
+        os.makedirs(log_folder_name)
+    df = pd.DataFrame(var)
+    df.index.name = 'iteration'
+    df.index = df.index + 1
+    df.to_csv(f"{log_folder_name}/{var_name}.csv", index=False)
 
 
 def save_trace_plot(burn_in, all_current_likelihoods, folder_name, file_name, title):
