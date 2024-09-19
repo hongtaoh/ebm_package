@@ -1,1 +1,3 @@
 .DS_Store
+bayes/
+__pycache__/
