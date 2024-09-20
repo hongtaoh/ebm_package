@@ -9,6 +9,7 @@ from sklearn.cluster import AgglomerativeClustering
 from collections import OrderedDict
 import seaborn as sns 
 import matplotlib.pyplot as plt 
+import math 
 
 def compute_theta_phi_for_biomarker(
     biomarker_df: pd.DataFrame,
@@ -31,7 +32,7 @@ def compute_theta_phi_for_biomarker(
         - phi_mean (float): Mean of the measurements in the phi cluster.
         - phi_std (float): Standard deviation of the measurements in the phi cluster.
     """
-    clustering_setup = KMeans(n_clusters=2, random_state=0, n_init="auto")
+    clustering_setup = KMeans(n_clusters=2, n_init="auto")
 
     # you need to make sure each measurment is a np.array before putting it into "fit"
     measurements = np.array(biomarker_df['measurement']).reshape(-1, 1)
@@ -50,21 +51,22 @@ def compute_theta_phi_for_biomarker(
     phi_cluster_idx = mode(healthy_predictions, keepdims=False).mode
     theta_cluster_idx = 1 - phi_cluster_idx
 
-    if len(set(healthy_predictions)) > 1:
-        # Reassign clusters using Agglomerative Clustering
-        clustering = AgglomerativeClustering(
-            n_clusters=2).fit(healthy_measurements)
+    # if len(set(healthy_predictions)) > 1:
+    #     # Reassign clusters using Agglomerative Clustering
+    #     clustering = AgglomerativeClustering(
+    #         n_clusters=2).fit(healthy_measurements)
 
-        # Find the dominant cluster for healthy participants
-        phi_cluster_idx = mode(clustering.labels_, keepdims=False).mode
+    #     # Find the dominant cluster for healthy participants
+    #     phi_cluster_idx = mode(clustering.labels_, keepdims=False).mode
 
-        # Update predictions to ensure all healthy participants are in the dominant cluster
-        updated_predictions = predictions.copy()
-        for i in healthy_df.index:
-            updated_predictions[i] = phi_cluster_idx
-    else:
-        updated_predictions = predictions
+    #     # Update predictions to ensure all healthy participants are in the dominant cluster
+    #     updated_predictions = predictions.copy()
+    #     for i in healthy_df.index:
+    #         updated_predictions[i] = phi_cluster_idx
+    # else:
+    #     updated_predictions = predictions
 
+    updated_predictions = predictions.copy()
     # two empty clusters to strore measurements
     clusters = [[] for _ in range(2)]
     # Store measurements into their cluster
@@ -76,6 +78,13 @@ def compute_theta_phi_for_biomarker(
         clusters[theta_cluster_idx]), np.std(clusters[theta_cluster_idx])
     phi_mean, phi_std = np.mean(clusters[phi_cluster_idx]), np.std(
         clusters[phi_cluster_idx])
+    
+    # check whether the prior_theta_phi contain 0s or nan
+    if theta_std == 0 or math.isnan(theta_std):
+       print(f"In prior_theta_phi, theta_std is {theta_std}")
+    if phi_std == 0 or math.isnan(phi_std):
+        print(f"In prior_theta_phi, phi_std is {phi_std}")
+        
     return theta_mean, theta_std, phi_mean, phi_std
 
 def get_theta_phi_estimates(
@@ -112,7 +121,6 @@ def get_theta_phi_estimates(
             'phi_std': phi_std
         }
     return estimates
-
 
 def fill_up_kj_and_affected(pdata, k_j):
     '''Fill up a single participant's data using k_j; basically add two columns: 

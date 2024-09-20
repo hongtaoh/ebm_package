@@ -33,6 +33,8 @@ def calculate_soft_kmeans_for_biomarker(
     if seed is not None:
         # Set the seed for numpy's random number generator
         rng = np.random.default_rng(seed)
+    else:
+        rng = np.random 
 
     # DataFrame for this biomarker
     biomarker_df = data[data['biomarker'] == biomarker].reset_index(drop=True)
@@ -172,7 +174,7 @@ def calculate_all_participant_ln_likelihood_and_update_hashmap(
             likelihood_sum = sum(stage_likelihood_dict.values())
             epsilon = 1e-10
             if likelihood_sum == 0:
-                print("Invalid likelihood_sum: zero encountered.")
+                # print("Invalid likelihood_sum: zero encountered.")
                 likelihood_sum = epsilon  # Handle the case accordingly
             normalized_stage_likelihood = [
                 l/likelihood_sum for l in stage_likelihood_dict.values()]
@@ -252,7 +254,7 @@ def metropolis_hastings_soft_kmeans(
             non_diseased_participant_ids,
             hashmap_of_normalized_stage_likelihood_dicts,
             diseased_stages,
-            seed=42,
+            seed=None,
         )
 
         # Log-Sum-Exp Trick
@@ -279,14 +281,14 @@ def metropolis_hastings_soft_kmeans(
         acceptance_ratio = acceptance_count*100/(_+1)
         all_current_accepted_order_dicts.append(current_accepted_order_dict)
 
-        if (_+1) % 10 == 0:
+        if (_+1) % 200 == 0:
             formatted_string = (
                 f"iteration {_ + 1} done, "
                 f"current accepted likelihood: {current_accepted_likelihood}, "
                 f"current acceptance ratio is {acceptance_ratio:.2f} %, "
-                f"current accepted order is {current_accepted_order_dict}, "
+                f"current accepted order is {current_accepted_order_dict.values()}, "
             )
             print(formatted_string)
 
-    print("done!")
+    # print("done!")
     return all_current_accepted_order_dicts

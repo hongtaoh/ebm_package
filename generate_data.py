@@ -12,7 +12,7 @@ def generate_data_from_ebm(
     healthy_ratio: float,
     output_dir: str,
     m,  # combstr_m
-    seed: Optional[int] = None
+    seed: Optional[int] = 0
 ) -> pd.DataFrame:
     """
     Simulate an Event-Based Model (EBM) for disease progression.
@@ -124,6 +124,10 @@ if __name__ == '__main__':
     S_ordering = [
         'HIP-FCI', 'PCC-FCI', 'HIP-GMI', 'FUS-GMI', 'FUS-FCI'
     ]
+    # S_ordering = np.array([
+    #     'HIP-FCI', 'PCC-FCI', 'AB', 'P-Tau', 'MMSE', 'ADAS', 
+    #     'HIP-GMI', 'AVLT-Sum', 'FUS-GMI', 'FUS-FCI'
+    # ])
     real_theta_phi_file = 'json_files/real_theta_phi.json'
 
     js = [50, 200, 500]
@@ -140,5 +144,5 @@ if __name__ == '__main__':
                     healthy_ratio=r,
                     output_dir='data/synthetic',
                     m=m,
-                    seed=m,
+                    seed = int(j*10 + (r * 100) + m),
                 )
