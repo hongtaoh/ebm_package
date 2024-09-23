@@ -121,13 +121,13 @@ def generate_data_from_ebm(
     return data
 
 if __name__ == '__main__':
-    S_ordering = [
-        'HIP-FCI', 'PCC-FCI', 'HIP-GMI', 'FUS-GMI', 'FUS-FCI'
-    ]
-    # S_ordering = np.array([
-    #     'HIP-FCI', 'PCC-FCI', 'AB', 'P-Tau', 'MMSE', 'ADAS', 
-    #     'HIP-GMI', 'AVLT-Sum', 'FUS-GMI', 'FUS-FCI'
-    # ])
+    # S_ordering = [
+    #     'HIP-FCI', 'PCC-FCI', 'HIP-GMI', 'FUS-GMI', 'FUS-FCI'
+    # ]
+    S_ordering = np.array([
+        'HIP-FCI', 'PCC-FCI', 'AB', 'P-Tau', 'MMSE', 'ADAS', 
+        'HIP-GMI', 'AVLT-Sum', 'FUS-GMI', 'FUS-FCI'
+    ])
     real_theta_phi_file = 'json_files/real_theta_phi.json'
 
     js = [50, 200, 500]
@@ -142,7 +142,7 @@ if __name__ == '__main__':
                     S_ordering=S_ordering,
                     real_theta_phi_file=real_theta_phi_file,
                     healthy_ratio=r,
-                    output_dir='data/synthetic',
+                    output_dir='data',
                     m=m,
                     seed = int(j*10 + (r * 100) + m),
                 )

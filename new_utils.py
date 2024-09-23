@@ -7,9 +7,10 @@ from scipy.stats import mode
 from sklearn.cluster import KMeans
 from sklearn.cluster import AgglomerativeClustering
 from collections import OrderedDict
-import seaborn as sns 
-import matplotlib.pyplot as plt 
-import math 
+import seaborn as sns
+import matplotlib.pyplot as plt
+import math
+
 
 def compute_theta_phi_for_biomarker(
     biomarker_df: pd.DataFrame,
@@ -43,13 +44,22 @@ def compute_theta_phi_for_biomarker(
 
     # dataframe for non-diseased participants
     healthy_df = biomarker_df[biomarker_df['diseased'] == False]
-    healthy_measurements = np.array(healthy_df['measurement']).reshape(-1, 1)
+    diseased_df = biomarker_df[biomarker_df['diseased'] == True]
+    # healthy_measurements = np.array(healthy_df['measurement']).reshape(-1, 1)
     # which cluster are healthy participants in
     healthy_predictions = predictions[healthy_df.index]
+    diseased_predictions = predictions[diseased_df.index]
 
     # the mode of the above predictions will be the phi cluster index
     phi_cluster_idx = mode(healthy_predictions, keepdims=False).mode
     theta_cluster_idx = 1 - phi_cluster_idx
+
+    if len(set(healthy_predictions)) <= 1 or len(set(diseased_predictions)) <= 1:
+        clustering = AgglomerativeClustering(n_clusters=2).fit(
+            measurements)
+        updated_predictions = clustering.labels_
+    else:
+        updated_predictions = predictions.copy()
 
     # if len(set(healthy_predictions)) > 1:
     #     # Reassign clusters using Agglomerative Clustering
@@ -66,7 +76,7 @@ def compute_theta_phi_for_biomarker(
     # else:
     #     updated_predictions = predictions
 
-    updated_predictions = predictions.copy()
+
     # two empty clusters to strore measurements
     clusters = [[] for _ in range(2)]
     # Store measurements into their cluster
@@ -78,14 +88,21 @@ def compute_theta_phi_for_biomarker(
         clusters[theta_cluster_idx]), np.std(clusters[theta_cluster_idx])
     phi_mean, phi_std = np.mean(clusters[phi_cluster_idx]), np.std(
         clusters[phi_cluster_idx])
-    
+
     # check whether the prior_theta_phi contain 0s or nan
     if theta_std == 0 or math.isnan(theta_std):
-       print(f"In prior_theta_phi, theta_std is {theta_std}")
+        print(f"In prior_theta_phi, theta_std is {theta_std}")
     if phi_std == 0 or math.isnan(phi_std):
         print(f"In prior_theta_phi, phi_std is {phi_std}")
-        
+
+    # check whether the prior_theta_phi contain 0s or nan
+    if theta_mean == 0 or math.isnan(theta_mean):
+        print(f"In prior_theta_phi, theta_mean is {theta_mean}")
+    if phi_mean == 0 or math.isnan(phi_mean):
+        print(f"In prior_theta_phi, phi_mean is {phi_mean}")
+
     return theta_mean, theta_std, phi_mean, phi_std
+
 
 def get_theta_phi_estimates(
     data: pd.DataFrame,
@@ -122,6 +139,7 @@ def get_theta_phi_estimates(
         }
     return estimates
 
+
 def fill_up_kj_and_affected(pdata, k_j):
     '''Fill up a single participant's data using k_j; basically add two columns: 
     k_j and affected
@@ -156,9 +174,15 @@ def compute_single_measurement_likelihood(theta_phi, biomarker, affected, measur
     mu = biomarker_dict['theta_mean'] if affected else biomarker_dict['phi_mean']
     std = biomarker_dict['theta_std'] if affected else biomarker_dict['phi_std']
     var = std**2
-    likelihood = np.exp(-(measurement - mu)**2/(2*var))/np.sqrt(2*np.pi*var)
+    if var <= 0 or np.isnan(measurement) or np.isnan(mu):
+        print(f"Invalid values: measurement: {
+              measurement}, mu: {mu}, var: {var}")
+        likelihood = np.exp(-(measurement - mu)**2 /
+                            (2 * var)) / np.sqrt(2 * np.pi * var)
+    else:
+        likelihood = np.exp(-(measurement - mu)**2 /
+                            (2 * var)) / np.sqrt(2 * np.pi * var)
     return likelihood
-
 
 def compute_likelihood(pdata, k_j, theta_phi):
     '''This implementes the formula of https://ebm-book2.vercel.app/distributions.html#known-k-j
@@ -174,6 +198,7 @@ def compute_likelihood(pdata, k_j, theta_phi):
         likelihood *= compute_single_measurement_likelihood(
             theta_phi, biomarker, affected, measurement)
     return likelihood
+
 
 def shuffle_order(arr: np.ndarray, n_shuffle: int) -> None:
     """
@@ -196,6 +221,7 @@ def shuffle_order(arr: np.ndarray, n_shuffle: int) -> None:
 
     # Place the shuffled elements back into the array
     arr[indices] = selected_elements
+
 
 def obtain_most_likely_order_dic(all_current_accepted_order_dicts, burn_in, thining):
     """Obtain the most likely order based on all the accepted orders 
@@ -229,6 +255,7 @@ def obtain_most_likely_order_dic(all_current_accepted_order_dicts, burn_in, thin
             raise ValueError(
                 f"Could not assign a unique stage for biomarker {biomarker}.")
     return od
+
 
 def get_biomarker_stage_probability(all_current_accepted_order_dicts, burn_in, thining):
     """filter through all_dicts using burn_in and thining 
@@ -269,6 +296,7 @@ def get_biomarker_stage_probability(all_current_accepted_order_dicts, burn_in, t
     dff = pd.DataFrame(dict_list)
     dff.set_index(dff.columns[0], inplace=True)
     return dff
+
 
 def save_heatmap(all_dicts, burn_in, thining, folder_name, file_name, title):
     # Check if the directory exists

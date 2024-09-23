@@ -281,7 +281,7 @@ def metropolis_hastings_soft_kmeans(
         acceptance_ratio = acceptance_count*100/(_+1)
         all_current_accepted_order_dicts.append(current_accepted_order_dict)
 
-        if (_+1) % 200 == 0:
+        if (_+1) % 10 == 0:
             formatted_string = (
                 f"iteration {_ + 1} done, "
                 f"current accepted likelihood: {current_accepted_likelihood}, "
