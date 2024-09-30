@@ -11,7 +11,6 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import math
 
-
 def compute_theta_phi_for_biomarker(
     biomarker_df: pd.DataFrame,
 ) -> Tuple[float, float, float, float]:
@@ -33,7 +32,9 @@ def compute_theta_phi_for_biomarker(
         - phi_mean (float): Mean of the measurements in the phi cluster.
         - phi_std (float): Standard deviation of the measurements in the phi cluster.
     """
-    clustering_setup = KMeans(n_clusters=2, n_init="auto")
+    # Ensure n_init is set properly (use "auto" or an integer)
+    n_init_value = int(10)
+    clustering_setup = KMeans(n_clusters=2, n_init=n_init_value)
 
     # you need to make sure each measurment is a np.array before putting it into "fit"
     measurements = np.array(biomarker_df['measurement']).reshape(-1, 1)
@@ -54,7 +55,7 @@ def compute_theta_phi_for_biomarker(
     phi_cluster_idx = mode(healthy_predictions, keepdims=False).mode
     theta_cluster_idx = 1 - phi_cluster_idx
 
-    if len(set(healthy_predictions)) <= 1 or len(set(diseased_predictions)) <= 1:
+    if len(set(healthy_predictions)) <= int(1) or len(set(diseased_predictions)) <= int(1):
         clustering = AgglomerativeClustering(n_clusters=2).fit(
             measurements)
         updated_predictions = clustering.labels_
@@ -174,9 +175,8 @@ def compute_single_measurement_likelihood(theta_phi, biomarker, affected, measur
     mu = biomarker_dict['theta_mean'] if affected else biomarker_dict['phi_mean']
     std = biomarker_dict['theta_std'] if affected else biomarker_dict['phi_std']
     var = std**2
-    if var <= 0 or np.isnan(measurement) or np.isnan(mu):
-        print(f"Invalid values: measurement: {
-              measurement}, mu: {mu}, var: {var}")
+    if var <= int(0) or np.isnan(measurement) or np.isnan(mu):
+        print(f"Invalid values: measurement: {measurement}, mu: {mu}, var: {var}")
         likelihood = np.exp(-(measurement - mu)**2 /
                             (2 * var)) / np.sqrt(2 * np.pi * var)
     else:

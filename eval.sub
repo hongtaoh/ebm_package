@@ -1,0 +1,42 @@
+Executable = eval.sh
+Arguments = $(j) $(r) $(m)
+
+Initialdir = /home/hhao9/ebm_package
+
+# Transfer necessary files to the compute node
+transfer_input_files = eval.py, new_utils.py, soft_kmeans_alg.py, data.tar.gz, eval.sh, bayes.tar.gz, requirements.txt
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+transfer_output_files = temp_json_results, img
+
+Log = logs/eval_j$(j)_r$(r)_m$(m).log
+Error = logs/eval_j$(j)_r$(r)_m$(m).err
+Output = logs/eval_j$(j)_r$(r)_m$(m).out
+
+request_cpus = 1
+request_memory = 2GB 
+request_disk = 2GB
+
+# Automatically release held jobs every 5 minutes
+# PeriodicRelease = (CurrentTime - EnteredCurrentStatus) > 300
+
+# Limit to 50 jobs running at the same time
+# +MaxRunningJobs = 50
+
+queue j, r, m from (
+    500 0.1 5
+500 0.1 17
+500 0.1 25
+500 0.1 26
+500 0.1 31
+500 0.1 32
+500 0.1 33
+500 0.1 37
+500 0.1 38
+500 0.1 43
+500 0.1 44
+500 0.1 49
+500 0.25 0
+500 0.25 4
+)
+

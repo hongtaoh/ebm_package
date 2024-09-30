@@ -1,0 +1,92 @@
+000 (506489.012.000) 2024-09-27 14:23:40 Job submitted from host: <128.105.68.112:9618?addrs=[2607-f388-2200-100-eaeb-d3ff-fea3-4202]-9618+128.105.68.112-9618&alias=ap2001.chtc.wisc.edu&noUDP&sock=schedd_146090_2acf>
+...
+009 (504975.012.000) 2024-09-27 14:23:40 Job was aborted.
+	via condor_rm (by user hhao9)
+...
+040 (506489.012.000) 2024-09-27 14:23:41 Started transferring input files
+	Transferring to host: <128.105.69.132:9618?addrs=[2607-f388-2200-100-1270-fdff-fe56-673c]-9618+128.105.69.132-9618&alias=e4081.chtc.wisc.edu&noUDP&sock=slot1_66_291949_3b39_19681>
+...
+040 (506489.012.000) 2024-09-27 14:23:42 Finished transferring input files
+...
+001 (506489.012.000) 2024-09-27 14:23:42 Job executing on host: <128.105.69.132:9618?addrs=[2607-f388-2200-100-1270-fdff-fe56-673c]-9618+128.105.69.132-9618&alias=e4081.chtc.wisc.edu&noUDP&sock=startd_20493_126a>
+	SlotName: slot1_66@e4081.chtc.wisc.edu
+	CondorScratchDir = "/var/lib/condor/execute/slot1/dir_2661284"
+	Cpus = 1
+	Disk = 4195457
+	GPUs = 0
+	IoHeavy = 0
+	Memory = 2048
+...
+006 (506489.012.000) 2024-09-27 14:23:50 Image size of job updated: 656424
+	46  -  MemoryUsage of job (MB)
+	46656  -  ResidentSetSize of job (KB)
+...
+006 (506489.012.000) 2024-09-27 14:28:50 Image size of job updated: 666812
+	47  -  MemoryUsage of job (MB)
+	47300  -  ResidentSetSize of job (KB)
+...
+006 (506489.012.000) 2024-09-27 14:33:51 Image size of job updated: 666864
+	47  -  MemoryUsage of job (MB)
+	47300  -  ResidentSetSize of job (KB)
+...
+006 (506489.012.000) 2024-09-27 15:48:57 Image size of job updated: 666868
+	47  -  MemoryUsage of job (MB)
+	47300  -  ResidentSetSize of job (KB)
+...
+006 (506489.012.000) 2024-09-27 16:34:02 Image size of job updated: 666872
+	47  -  MemoryUsage of job (MB)
+	47300  -  ResidentSetSize of job (KB)
+...
+006 (506489.012.000) 2024-09-27 16:39:03 Image size of job updated: 666880
+	47  -  MemoryUsage of job (MB)
+	47300  -  ResidentSetSize of job (KB)
+...
+006 (506489.012.000) 2024-09-27 16:59:06 Image size of job updated: 666884
+	47  -  MemoryUsage of job (MB)
+	47300  -  ResidentSetSize of job (KB)
+...
+006 (506489.012.000) 2024-09-27 17:04:06 Image size of job updated: 666904
+	47  -  MemoryUsage of job (MB)
+	47300  -  ResidentSetSize of job (KB)
+...
+006 (506489.012.000) 2024-09-27 17:14:07 Image size of job updated: 666912
+	47  -  MemoryUsage of job (MB)
+	47300  -  ResidentSetSize of job (KB)
+...
+006 (506489.012.000) 2024-09-27 17:19:07 Image size of job updated: 666920
+	47  -  MemoryUsage of job (MB)
+	47300  -  ResidentSetSize of job (KB)
+...
+006 (506489.012.000) 2024-09-27 17:24:08 Image size of job updated: 667176
+	47  -  MemoryUsage of job (MB)
+	47300  -  ResidentSetSize of job (KB)
+...
+006 (506489.012.000) 2024-09-27 22:45:59 Image size of job updated: 672244
+	47  -  MemoryUsage of job (MB)
+	47300  -  ResidentSetSize of job (KB)
+...
+040 (506489.012.000) 2024-09-27 22:45:59 Started transferring output files
+...
+040 (506489.012.000) 2024-09-27 22:45:59 Finished transferring output files
+...
+005 (506489.012.000) 2024-09-27 22:45:59 Job terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 08:13:48, Sys 0 00:00:08  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 08:13:48, Sys 0 00:00:08  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	182350  -  Run Bytes Sent By Job
+	152393296  -  Run Bytes Received By Job
+	182350  -  Total Bytes Sent By Job
+	152393296  -  Total Bytes Received By Job
+	Partitionable Resources :     Usage  Request Allocated 
+	   Cpus                 :      0.99        1         1 
+	   Disk (KB)            : 625592     2097152   4195457 
+	   GPUs                 :                            0 
+	   IoHeavy              :                            0 
+	   Memory (MB)          :     47        2048      2048 
+	   TimeExecute (s)      :  30137                       
+	   TimeSlotBusy (s)     :  30138                       
+
+	Job terminated of its own accord at 2024-09-28T03:45:59Z with exit-code 0.
+...
