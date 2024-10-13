@@ -1,0 +1,19 @@
+  WARNING: The scripts f2py and numpy-config are installed in '/home/hhao9/.local/bin' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  WARNING: The scripts fonttools, pyftmerge, pyftsubset and ttx are installed in '/home/hhao9/.local/bin' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  ERROR: Failed to restore /home/hhao9/.local/lib/python3.9/site-packages/scipy/interpolate/
+  ERROR: Failed to restore /home/hhao9/.local/lib/python3.9/site-packages/scipy/io/
+  ERROR: Failed to restore /home/hhao9/.local/lib/python3.9/site-packages/scipy/ndimage/
+  ERROR: Failed to restore /home/hhao9/.local/lib/python3.9/site-packages/scipy/signal/
+  ERROR: Failed to restore /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/csgraph/
+  ERROR: Failed to restore /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/linalg/
+  ERROR: Failed to restore /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/tests/data/
+  ERROR: Failed to restore /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/__pycache__/
+  ERROR: Failed to restore /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/qhull_src/
+  ERROR: Failed to restore /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/tests/data/
+  ERROR: Failed to restore /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/transform/
+  ERROR: Failed to restore /home/hhao9/.local/lib/python3.9/site-packages/scipy/special/
+  ERROR: Failed to restore /home/hhao9/.local/lib/python3.9/site-packages/scipy/stats/
+ERROR: Could not install packages due to an OSError: [Errno 2] No such file or directory: '/home/hhao9/.local/lib/python3.9/site-packages/scipy/interpolate/dfitpack.cpython-39-x86_64-linux-gnu.so'
+

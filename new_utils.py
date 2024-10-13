@@ -11,7 +11,22 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import math
 
-def compute_theta_phi_for_biomarker(
+def compute_theta_phi_for_biomarker(biomarker_df, max_attempt = 10):
+    for x in range(max_attempt):
+        measurements = np.array(biomarker_df['measurement']).reshape(-1, 1)
+        healthy_df = biomarker_df[biomarker_df['diseased'] == False]
+        diseased_df = biomarker_df[biomarker_df['diseased'] == True]
+        predictions = KMeans(n_clusters=2, n_init=x).fit(measurements).labels_
+        cluster_counts = np.bincount(predictions)
+        healthy_predictions = predictions[healthy_df.index]
+        diseased_predictions = predictions[diseased_df.index]
+        # if two clusters exist and each cluster has more than 1 element
+        # and if all healthy participants belong to one group
+        if all(c > 1 for c in cluster_counts) and len(set(healthy_predictions)) == 1:
+            break 
+
+
+def compute_theta_phi_for_biomarker_(
     biomarker_df: pd.DataFrame,
 ) -> Tuple[float, float, float, float]:
     """
@@ -41,6 +56,7 @@ def compute_theta_phi_for_biomarker(
 
     # Fit clustering method
     clustering_result = clustering_setup.fit(measurements)
+    # in our case, since n_cluster = 2, the labels_ will be a numpy array containing 0s and 1s
     predictions = clustering_result.labels_
 
     # dataframe for non-diseased participants
@@ -51,16 +67,19 @@ def compute_theta_phi_for_biomarker(
     healthy_predictions = predictions[healthy_df.index]
     diseased_predictions = predictions[diseased_df.index]
 
-    # the mode of the above predictions will be the phi cluster index
+    # the mode of the healthy predictions will be the phi cluster index
     phi_cluster_idx = mode(healthy_predictions, keepdims=False).mode
     theta_cluster_idx = 1 - phi_cluster_idx
 
-    if len(set(healthy_predictions)) <= int(1) or len(set(diseased_predictions)) <= int(1):
-        clustering = AgglomerativeClustering(n_clusters=2).fit(
-            measurements)
-        updated_predictions = clustering.labels_
-    else:
-        updated_predictions = predictions.copy()
+
+
+
+    # if len(set(healthy_predictions)) <= int(1) or len(set(diseased_predictions)) <= int(1):
+    #     clustering = AgglomerativeClustering(n_clusters=2).fit(
+    #         measurements)
+    #     updated_predictions = clustering.labels_
+    # else:
+    #     updated_predictions = predictions.copy()
 
     # if len(set(healthy_predictions)) > 1:
     #     # Reassign clusters using Agglomerative Clustering
@@ -140,7 +159,6 @@ def get_theta_phi_estimates(
         }
     return estimates
 
-
 def fill_up_kj_and_affected(pdata, k_j):
     '''Fill up a single participant's data using k_j; basically add two columns: 
     k_j and affected
@@ -154,7 +172,6 @@ def fill_up_kj_and_affected(pdata, k_j):
     data['k_j'] = k_j
     data['affected'] = data.apply(lambda row: row.k_j >= row.S_n, axis=1)
     return data
-
 
 def compute_single_measurement_likelihood(theta_phi, biomarker, affected, measurement):
     '''Computes the likelihood of the measurement value of a single biomarker

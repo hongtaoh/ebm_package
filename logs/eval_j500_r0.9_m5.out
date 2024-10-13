@@ -1,0 +1,29 @@
+eval.sh started at Tue Oct  8 12:43:18 CDT 2024
+Running in directory: /var/lib/condor/execute/slot1/dir_4145163
+Running with arguments: 500 0.9 5
+Unpacking virtual environment...
+Files present:
+total 162676
+-rw-r--r-- 1 hhao9 hhao9         0 Oct  8 12:43 _condor_stderr
+-rw-r--r-- 1 hhao9 hhao9       194 Oct  8 12:43 _condor_stdout
+drwxr-xr-x 6 hhao9 hhao9      4096 Sep 23 12:54 bayes
+-rw-r--r-- 1 hhao9 hhao9 142478648 Oct  8 12:43 bayes.tar.gz
+-rw-r--r-- 1 hhao9 hhao9     11604 Oct  8 12:43 conjugate_priors_alg.py
+drwxr-xr-x 2 hhao9 hhao9     32768 Sep 23 12:51 data
+-rw-r--r-- 1 hhao9 hhao9  23994367 Oct  8 12:43 data.tar.gz
+-rw-r--r-- 1 hhao9 hhao9      3170 Oct  8 12:43 eval_cp.py
+-rwxr-xr-x 1 hhao9 hhao9      1190 Oct  8 12:43 eval_cp.sh
+drwxr-xr-x 2 hhao9 hhao9      4096 Oct  8 12:43 img
+drwxr-xr-x 2 hhao9 hhao9      4096 Oct  8 12:43 logs
+-rw-r--r-- 1 hhao9 hhao9     12700 Oct  8 12:43 new_utils.py
+-rw-r--r-- 1 hhao9 hhao9        97 Oct  8 12:43 requirements.txt
+drwxr-xr-x 2 hhao9 hhao9      4096 Oct  8 12:43 temp_json_results
+drwx------ 2 hhao9 hhao9      4096 Oct  8 12:43 tmp
+drwx------ 3 hhao9 hhao9      4096 Oct  8 12:43 var
+Current working directory: /var/lib/condor/execute/slot1/dir_4145163
+Data directory: /var/lib/condor/execute/slot1/dir_4145163/data
+Temp results directory: /var/lib/condor/execute/slot1/dir_4145163/temp_json_results/conjugate_priors
+Image directory: /var/lib/condor/execute/slot1/dir_4145163/img/conjugate_priors
+Processing with j=500, r=0.9, m=5
+Data file found: /var/lib/condor/execute/slot1/dir_4145163/data/450|500_5.csv
+450|500_5 is done! Results written to /var/lib/condor/execute/slot1/dir_4145163/temp_json_results/conjugate_priors/temp_results_500_0.9_5.json

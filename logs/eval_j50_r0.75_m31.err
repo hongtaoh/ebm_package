@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/var/lib/condor/execute/slot1/dir_3847895/./eval_cp.py", line 5, in <module>
+    import conjugate_priors_alg 
+  File "/var/lib/condor/execute/slot1/dir_3847895/conjugate_priors_alg.py", line 3, in <module>
+    import new_utils
+  File "/var/lib/condor/execute/slot1/dir_3847895/new_utils.py", line 5, in <module>
+    from scipy.stats import kendalltau
+ModuleNotFoundError: No module named 'scipy.stats'

@@ -1,0 +1,26 @@
+  WARNING: The scripts f2py and numpy-config are installed in '/home/hhao9/.local/bin' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  WARNING: The scripts fonttools, pyftmerge, pyftsubset and ttx are installed in '/home/hhao9/.local/bin' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+Exception ignored on calling ctypes callback function: <function ThreadpoolController._find_libraries_with_dl_iterate_phdr.<locals>.match_library_callback at 0x154ee35b4160>
+Traceback (most recent call last):
+  File "/home/hhao9/.local/lib/python3.9/site-packages/threadpoolctl.py", line 1005, in match_library_callback
+    self._make_controller_from_path(filepath)
+  File "/home/hhao9/.local/lib/python3.9/site-packages/threadpoolctl.py", line 1175, in _make_controller_from_path
+    lib_controller = controller_class(
+  File "/home/hhao9/.local/lib/python3.9/site-packages/threadpoolctl.py", line 114, in __init__
+    self.dynlib = ctypes.CDLL(filepath, mode=_RTLD_NOLOAD)
+  File "/usr/lib64/python3.9/ctypes/__init__.py", line 374, in __init__
+    self._handle = _dlopen(self._name, mode)
+OSError: dlopen() error
+Exception ignored on calling ctypes callback function: <function ThreadpoolController._find_libraries_with_dl_iterate_phdr.<locals>.match_library_callback at 0x154ee35b4160>
+Traceback (most recent call last):
+  File "/home/hhao9/.local/lib/python3.9/site-packages/threadpoolctl.py", line 1005, in match_library_callback
+    self._make_controller_from_path(filepath)
+  File "/home/hhao9/.local/lib/python3.9/site-packages/threadpoolctl.py", line 1175, in _make_controller_from_path
+    lib_controller = controller_class(
+  File "/home/hhao9/.local/lib/python3.9/site-packages/threadpoolctl.py", line 114, in __init__
+    self.dynlib = ctypes.CDLL(filepath, mode=_RTLD_NOLOAD)
+  File "/usr/lib64/python3.9/ctypes/__init__.py", line 374, in __init__
+    self._handle = _dlopen(self._name, mode)
+OSError: dlopen() error

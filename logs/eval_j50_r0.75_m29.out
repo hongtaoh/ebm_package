@@ -1,0 +1,413 @@
+eval.sh started at Tue Oct  8 11:44:48 CDT 2024
+Running in directory: /var/lib/condor/execute/slot1/dir_3847733
+Running with arguments: 50 0.75 29
+Unpacking virtual environment...
+Some packages not found, attempting to install dependencies with force reinstall and no cache...
+Defaulting to user installation because normal site-packages is not writeable
+Collecting matplotlib==3.9.2
+  Downloading matplotlib-3.9.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (8.3 MB)
+Collecting numpy==2.0.2
+  Downloading numpy-2.0.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (19.5 MB)
+Collecting pandas==2.2.3
+  Downloading pandas-2.2.3-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (13.1 MB)
+Collecting scipy==1.13.1
+  Downloading scipy-1.13.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (38.6 MB)
+Collecting scikit-learn==1.5.2
+  Downloading scikit_learn-1.5.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (13.4 MB)
+Collecting seaborn==0.13.2
+  Downloading seaborn-0.13.2-py3-none-any.whl (294 kB)
+Collecting pyparsing>=2.3.1
+  Downloading pyparsing-3.1.4-py3-none-any.whl (104 kB)
+Collecting fonttools>=4.22.0
+  Downloading fonttools-4.54.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (4.6 MB)
+Collecting kiwisolver>=1.3.1
+  Downloading kiwisolver-1.4.7-cp39-cp39-manylinux_2_12_x86_64.manylinux2010_x86_64.whl (1.6 MB)
+Collecting python-dateutil>=2.7
+  Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+Collecting pillow>=8
+  Downloading pillow-10.4.0-cp39-cp39-manylinux_2_28_x86_64.whl (4.5 MB)
+Collecting cycler>=0.10
+  Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+Collecting contourpy>=1.0.1
+  Downloading contourpy-1.3.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (321 kB)
+Collecting importlib-resources>=3.2.0
+  Downloading importlib_resources-6.4.5-py3-none-any.whl (36 kB)
+Collecting packaging>=20.0
+  Downloading packaging-24.1-py3-none-any.whl (53 kB)
+Collecting pytz>=2020.1
+  Downloading pytz-2024.2-py2.py3-none-any.whl (508 kB)
+Collecting tzdata>=2022.7
+  Downloading tzdata-2024.2-py2.py3-none-any.whl (346 kB)
+Collecting threadpoolctl>=3.1.0
+  Downloading threadpoolctl-3.5.0-py3-none-any.whl (18 kB)
+Collecting joblib>=1.2.0
+  Downloading joblib-1.4.2-py3-none-any.whl (301 kB)
+Collecting zipp>=3.1.0
+  Downloading zipp-3.20.2-py3-none-any.whl (9.2 kB)
+Collecting six>=1.5
+  Downloading six-1.16.0-py2.py3-none-any.whl (11 kB)
+Installing collected packages: zipp, six, numpy, tzdata, pytz, python-dateutil, pyparsing, pillow, packaging, kiwisolver, importlib-resources, fonttools, cycler, contourpy, threadpoolctl, scipy, pandas, matplotlib, joblib, seaborn, scikit-learn
+  Attempting uninstall: zipp
+    Found existing installation: zipp 3.20.2
+    Uninstalling zipp-3.20.2:
+      Successfully uninstalled zipp-3.20.2
+  Attempting uninstall: six
+    Found existing installation: six 1.16.0
+    Uninstalling six-1.16.0:
+      Successfully uninstalled six-1.16.0
+  Attempting uninstall: numpy
+    Found existing installation: numpy 2.0.2
+    Uninstalling numpy-2.0.2:
+      Successfully uninstalled numpy-2.0.2
+  Attempting uninstall: tzdata
+    Found existing installation: tzdata 2024.2
+    Uninstalling tzdata-2024.2:
+      Successfully uninstalled tzdata-2024.2
+  Attempting uninstall: pytz
+    Found existing installation: pytz 2024.2
+    Uninstalling pytz-2024.2:
+      Successfully uninstalled pytz-2024.2
+  Attempting uninstall: python-dateutil
+    Found existing installation: python-dateutil 2.9.0.post0
+    Uninstalling python-dateutil-2.9.0.post0:
+      Successfully uninstalled python-dateutil-2.9.0.post0
+  Attempting uninstall: pyparsing
+    Found existing installation: pyparsing 3.1.4
+    Uninstalling pyparsing-3.1.4:
+      Successfully uninstalled pyparsing-3.1.4
+  Attempting uninstall: pillow
+    Found existing installation: pillow 10.4.0
+    Uninstalling pillow-10.4.0:
+      Successfully uninstalled pillow-10.4.0
+  Attempting uninstall: packaging
+    Found existing installation: packaging 24.1
+    Uninstalling packaging-24.1:
+      Successfully uninstalled packaging-24.1
+  Attempting uninstall: kiwisolver
+    Found existing installation: kiwisolver 1.4.7
+    Uninstalling kiwisolver-1.4.7:
+      Successfully uninstalled kiwisolver-1.4.7
+  Attempting uninstall: importlib-resources
+    Found existing installation: importlib-resources 6.4.5
+    Uninstalling importlib-resources-6.4.5:
+      Successfully uninstalled importlib-resources-6.4.5
+  Attempting uninstall: fonttools
+    Found existing installation: fonttools 4.54.1
+    Uninstalling fonttools-4.54.1:
+      Successfully uninstalled fonttools-4.54.1
+  Attempting uninstall: cycler
+    Found existing installation: cycler 0.12.1
+    Uninstalling cycler-0.12.1:
+      Successfully uninstalled cycler-0.12.1
+  Attempting uninstall: contourpy
+    Found existing installation: contourpy 1.3.0
+    Uninstalling contourpy-1.3.0:
+      Successfully uninstalled contourpy-1.3.0
+  Attempting uninstall: threadpoolctl
+    Found existing installation: threadpoolctl 3.5.0
+    Uninstalling threadpoolctl-3.5.0:
+      Successfully uninstalled threadpoolctl-3.5.0
+  Attempting uninstall: scipy
+    Found existing installation: scipy 1.13.1
+    Uninstalling scipy-1.13.1:
+      Successfully uninstalled scipy-1.13.1
+  Rolling back uninstall of scipy
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy-1.13.1.dist-info/
+   from /home/hhao9/.local/lib/python3.9/site-packages/~-ipy-1.13.1.dist-info
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy.libs/
+   from /home/hhao9/.local/lib/python3.9/site-packages/~-ipy.libs
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/__config__.py
+   from /tmp/pip-uninstall-45akykl0/__config__.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/__init__.py
+   from /tmp/pip-uninstall-45akykl0/__init__.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/__pycache__/
+   from /home/hhao9/.local/lib/python3.9/site-packages/scipy/~_pycache__
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/_distributor_init.py
+   from /tmp/pip-uninstall-45akykl0/_distributor_init.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/_lib/
+   from /home/hhao9/.local/lib/python3.9/site-packages/scipy/~lib
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/cluster/
+   from /home/hhao9/.local/lib/python3.9/site-packages/scipy/~luster
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/conftest.py
+   from /tmp/pip-uninstall-45akykl0/conftest.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/constants/
+   from /home/hhao9/.local/lib/python3.9/site-packages/scipy/~onstants
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/datasets/
+   from /home/hhao9/.local/lib/python3.9/site-packages/scipy/~atasets
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/fft/
+   from /home/hhao9/.local/lib/python3.9/site-packages/scipy/~ft
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/fftpack/
+   from /home/hhao9/.local/lib/python3.9/site-packages/scipy/~ftpack
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/integrate/
+   from /home/hhao9/.local/lib/python3.9/site-packages/scipy/~ntegrate
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/interpolate/
+   from /home/hhao9/.local/lib/python3.9/site-packages/scipy/~nterpolate
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/io/
+   from /home/hhao9/.local/lib/python3.9/site-packages/scipy/~o
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/linalg.pxd
+   from /tmp/pip-uninstall-45akykl0/linalg.pxd
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/linalg/
+   from /home/hhao9/.local/lib/python3.9/site-packages/scipy/~inalg
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/misc/
+   from /home/hhao9/.local/lib/python3.9/site-packages/scipy/~isc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/ndimage/
+   from /home/hhao9/.local/lib/python3.9/site-packages/scipy/~dimage
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/odr/
+   from /home/hhao9/.local/lib/python3.9/site-packages/scipy/~dr
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/optimize.pxd
+   from /tmp/pip-uninstall-45akykl0/optimize.pxd
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/optimize/
+   from /home/hhao9/.local/lib/python3.9/site-packages/scipy/~ptimize
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/signal/
+   from /home/hhao9/.local/lib/python3.9/site-packages/scipy/~ignal
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/__init__.py
+   from /tmp/pip-uninstall-45akykl0/sparse/__init__.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/__pycache__/__init__.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/__pycache__/__init__.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/__pycache__/_base.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/__pycache__/_base.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/__pycache__/_bsr.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/__pycache__/_bsr.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/__pycache__/_compressed.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/__pycache__/_compressed.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/__pycache__/_construct.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/__pycache__/_construct.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/__pycache__/_coo.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/__pycache__/_coo.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/__pycache__/_csc.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/__pycache__/_csc.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/__pycache__/_csr.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/__pycache__/_csr.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/__pycache__/_data.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/__pycache__/_data.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/__pycache__/_dia.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/__pycache__/_dia.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/__pycache__/_dok.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/__pycache__/_dok.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/__pycache__/_extract.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/__pycache__/_extract.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/__pycache__/_index.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/__pycache__/_index.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/__pycache__/_lil.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/__pycache__/_lil.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/__pycache__/_matrix.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/__pycache__/_matrix.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/__pycache__/_matrix_io.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/__pycache__/_matrix_io.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/__pycache__/_spfuncs.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/__pycache__/_spfuncs.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/__pycache__/_sputils.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/__pycache__/_sputils.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/__pycache__/base.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/__pycache__/base.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/__pycache__/bsr.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/__pycache__/bsr.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/__pycache__/compressed.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/__pycache__/compressed.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/__pycache__/construct.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/__pycache__/construct.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/__pycache__/coo.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/__pycache__/coo.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/__pycache__/csc.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/__pycache__/csc.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/__pycache__/csr.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/__pycache__/csr.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/__pycache__/data.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/__pycache__/data.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/__pycache__/dia.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/__pycache__/dia.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/__pycache__/dok.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/__pycache__/dok.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/__pycache__/extract.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/__pycache__/extract.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/__pycache__/lil.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/__pycache__/lil.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/__pycache__/sparsetools.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/__pycache__/sparsetools.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/__pycache__/sputils.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/__pycache__/sputils.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/_base.py
+   from /tmp/pip-uninstall-45akykl0/sparse/_base.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/_bsr.py
+   from /tmp/pip-uninstall-45akykl0/sparse/_bsr.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/_compressed.py
+   from /tmp/pip-uninstall-45akykl0/sparse/_compressed.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/_construct.py
+   from /tmp/pip-uninstall-45akykl0/sparse/_construct.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/_coo.py
+   from /tmp/pip-uninstall-45akykl0/sparse/_coo.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/_csc.py
+   from /tmp/pip-uninstall-45akykl0/sparse/_csc.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/_csparsetools.cpython-39-x86_64-linux-gnu.so
+   from /tmp/pip-uninstall-45akykl0/sparse/_csparsetools.cpython-39-x86_64-linux-gnu.so
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/_csr.py
+   from /tmp/pip-uninstall-45akykl0/sparse/_csr.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/_data.py
+   from /tmp/pip-uninstall-45akykl0/sparse/_data.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/_dia.py
+   from /tmp/pip-uninstall-45akykl0/sparse/_dia.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/_dok.py
+   from /tmp/pip-uninstall-45akykl0/sparse/_dok.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/_extract.py
+   from /tmp/pip-uninstall-45akykl0/sparse/_extract.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/_index.py
+   from /tmp/pip-uninstall-45akykl0/sparse/_index.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/_lil.py
+   from /tmp/pip-uninstall-45akykl0/sparse/_lil.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/_matrix.py
+   from /tmp/pip-uninstall-45akykl0/sparse/_matrix.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/_matrix_io.py
+   from /tmp/pip-uninstall-45akykl0/sparse/_matrix_io.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/_sparsetools.cpython-39-x86_64-linux-gnu.so
+   from /tmp/pip-uninstall-45akykl0/sparse/_sparsetools.cpython-39-x86_64-linux-gnu.so
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/_spfuncs.py
+   from /tmp/pip-uninstall-45akykl0/sparse/_spfuncs.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/_sputils.py
+   from /tmp/pip-uninstall-45akykl0/sparse/_sputils.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/base.py
+   from /tmp/pip-uninstall-45akykl0/sparse/base.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/bsr.py
+   from /tmp/pip-uninstall-45akykl0/sparse/bsr.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/compressed.py
+   from /tmp/pip-uninstall-45akykl0/sparse/compressed.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/construct.py
+   from /tmp/pip-uninstall-45akykl0/sparse/construct.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/coo.py
+   from /tmp/pip-uninstall-45akykl0/sparse/coo.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/csc.py
+   from /tmp/pip-uninstall-45akykl0/sparse/csc.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/csgraph/
+   from /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/~sgraph
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/csr.py
+   from /tmp/pip-uninstall-45akykl0/sparse/csr.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/data.py
+   from /tmp/pip-uninstall-45akykl0/sparse/data.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/dia.py
+   from /tmp/pip-uninstall-45akykl0/sparse/dia.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/dok.py
+   from /tmp/pip-uninstall-45akykl0/sparse/dok.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/extract.py
+   from /tmp/pip-uninstall-45akykl0/sparse/extract.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/lil.py
+   from /tmp/pip-uninstall-45akykl0/sparse/lil.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/linalg/
+   from /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/~inalg
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/sparsetools.py
+   from /tmp/pip-uninstall-45akykl0/sparse/sparsetools.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/spfuncs.py
+   from /tmp/pip-uninstall-45akykl0/sparse/spfuncs.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/sputils.py
+   from /tmp/pip-uninstall-45akykl0/sparse/sputils.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/tests/__init__.py
+   from /tmp/pip-uninstall-45akykl0/sparse/tests/__init__.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/tests/__pycache__/__init__.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/tests/__pycache__/__init__.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/tests/__pycache__/test_array_api.cpython-39.pyc
+   from /tmp/pip-uninstall-45akykl0/sparse/tests/__pycache__/test_array_api.cpython-39.pyc
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/tests/data/
+   from /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/tests/~ata
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/tests/test_array_api.py
+   from /tmp/pip-uninstall-45akykl0/sparse/tests/test_array_api.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/tests/test_base.py
+   from /tmp/pip-uninstall-45akykl0/sparse/tests/test_base.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/tests/test_common1d.py
+   from /tmp/pip-uninstall-45akykl0/sparse/tests/test_common1d.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/tests/test_construct.py
+   from /tmp/pip-uninstall-45akykl0/sparse/tests/test_construct.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/tests/test_coo.py
+   from /tmp/pip-uninstall-45akykl0/sparse/tests/test_coo.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/tests/test_csc.py
+   from /tmp/pip-uninstall-45akykl0/sparse/tests/test_csc.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/tests/test_csr.py
+   from /tmp/pip-uninstall-45akykl0/sparse/tests/test_csr.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/tests/test_deprecations.py
+   from /tmp/pip-uninstall-45akykl0/sparse/tests/test_deprecations.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/tests/test_dok.py
+   from /tmp/pip-uninstall-45akykl0/sparse/tests/test_dok.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/tests/test_extract.py
+   from /tmp/pip-uninstall-45akykl0/sparse/tests/test_extract.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/tests/test_matrix_io.py
+   from /tmp/pip-uninstall-45akykl0/sparse/tests/test_matrix_io.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/tests/test_minmax1d.py
+   from /tmp/pip-uninstall-45akykl0/sparse/tests/test_minmax1d.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/tests/test_sparsetools.py
+   from /tmp/pip-uninstall-45akykl0/sparse/tests/test_sparsetools.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/tests/test_spfuncs.py
+   from /tmp/pip-uninstall-45akykl0/sparse/tests/test_spfuncs.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/sparse/tests/test_sputils.py
+   from /tmp/pip-uninstall-45akykl0/sparse/tests/test_sputils.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/__init__.py
+   from /tmp/pip-uninstall-45akykl0/spatial/__init__.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/__pycache__/
+   from /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/~_pycache__
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/_ckdtree.cpython-39-x86_64-linux-gnu.so
+   from /tmp/pip-uninstall-45akykl0/spatial/_ckdtree.cpython-39-x86_64-linux-gnu.so
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/_ckdtree.pyi
+   from /tmp/pip-uninstall-45akykl0/spatial/_ckdtree.pyi
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/_distance_pybind.cpython-39-x86_64-linux-gnu.so
+   from /tmp/pip-uninstall-45akykl0/spatial/_distance_pybind.cpython-39-x86_64-linux-gnu.so
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/_distance_wrap.cpython-39-x86_64-linux-gnu.so
+   from /tmp/pip-uninstall-45akykl0/spatial/_distance_wrap.cpython-39-x86_64-linux-gnu.so
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/_geometric_slerp.py
+   from /tmp/pip-uninstall-45akykl0/spatial/_geometric_slerp.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/_hausdorff.cpython-39-x86_64-linux-gnu.so
+   from /tmp/pip-uninstall-45akykl0/spatial/_hausdorff.cpython-39-x86_64-linux-gnu.so
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/_kdtree.py
+   from /tmp/pip-uninstall-45akykl0/spatial/_kdtree.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/_plotutils.py
+   from /tmp/pip-uninstall-45akykl0/spatial/_plotutils.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/_procrustes.py
+   from /tmp/pip-uninstall-45akykl0/spatial/_procrustes.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/_qhull.cpython-39-x86_64-linux-gnu.so
+   from /tmp/pip-uninstall-45akykl0/spatial/_qhull.cpython-39-x86_64-linux-gnu.so
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/_qhull.pyi
+   from /tmp/pip-uninstall-45akykl0/spatial/_qhull.pyi
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/_spherical_voronoi.py
+   from /tmp/pip-uninstall-45akykl0/spatial/_spherical_voronoi.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/_voronoi.cpython-39-x86_64-linux-gnu.so
+   from /tmp/pip-uninstall-45akykl0/spatial/_voronoi.cpython-39-x86_64-linux-gnu.so
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/_voronoi.pyi
+   from /tmp/pip-uninstall-45akykl0/spatial/_voronoi.pyi
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/ckdtree.py
+   from /tmp/pip-uninstall-45akykl0/spatial/ckdtree.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/distance.py
+   from /tmp/pip-uninstall-45akykl0/spatial/distance.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/distance.pyi
+   from /tmp/pip-uninstall-45akykl0/spatial/distance.pyi
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/kdtree.py
+   from /tmp/pip-uninstall-45akykl0/spatial/kdtree.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/qhull.py
+   from /tmp/pip-uninstall-45akykl0/spatial/qhull.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/qhull_src/
+   from /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/~hull_src
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/tests/__init__.py
+   from /tmp/pip-uninstall-45akykl0/spatial/tests/__init__.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/tests/data/
+   from /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/tests/~ata
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/tests/test__plotutils.py
+   from /tmp/pip-uninstall-45akykl0/spatial/tests/test__plotutils.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/tests/test__procrustes.py
+   from /tmp/pip-uninstall-45akykl0/spatial/tests/test__procrustes.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/tests/test_distance.py
+   from /tmp/pip-uninstall-45akykl0/spatial/tests/test_distance.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/tests/test_hausdorff.py
+   from /tmp/pip-uninstall-45akykl0/spatial/tests/test_hausdorff.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/tests/test_kdtree.py
+   from /tmp/pip-uninstall-45akykl0/spatial/tests/test_kdtree.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/tests/test_qhull.py
+   from /tmp/pip-uninstall-45akykl0/spatial/tests/test_qhull.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/tests/test_slerp.py
+   from /tmp/pip-uninstall-45akykl0/spatial/tests/test_slerp.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/tests/test_spherical_voronoi.py
+   from /tmp/pip-uninstall-45akykl0/spatial/tests/test_spherical_voronoi.py
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/transform/
+   from /home/hhao9/.local/lib/python3.9/site-packages/scipy/spatial/~ransform
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/special.pxd
+   from /tmp/pip-uninstall-45akykl0/special.pxd
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/special/
+   from /home/hhao9/.local/lib/python3.9/site-packages/scipy/~pecial
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/stats/
+   from /home/hhao9/.local/lib/python3.9/site-packages/scipy/~tats
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/version.py
+   from /tmp/pip-uninstall-45akykl0/version.py
+Failed to install requirements

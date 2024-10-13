@@ -206,15 +206,16 @@ def estimate_params_exact(m0, n0, s0_sq, v0, data):
 
     return mu_estimation, std_estimation
 
-
 def get_theta_phi_conjugate_priors(biomarkers, data_we_have, theta_phi_kmeans):
     '''To get estimated parameters, returns a hashmap
     Input:
     - biomarkers: biomarkers 
     - data_we_have: participants data filled with initial or updated participant_stages
+    - theta_phi_kmeans: the initial theta and phi values
 
     Output: 
-    - a hashmap of dictionaries. Key is biomarker name and value is a dictionary. 
+    - a hashmap of dictionaries. Key is biomarker name and value is a dictionary.
+    This dictionary contains the theta and phi mean/std values. 
     '''
     # empty list of dictionaries to store the estimates
     hashmap_of_means_stds_estimate_dicts = {}

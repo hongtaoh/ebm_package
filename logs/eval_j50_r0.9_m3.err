@@ -1,0 +1,13 @@
+/var/lib/condor/execute/slot1/dir_3532936/new_utils.py:178: RuntimeWarning: divide by zero encountered in scalar divide
+  likelihood = np.exp(-(measurement - mu)**2 /
+/var/lib/condor/execute/slot1/dir_3532936/new_utils.py:178: RuntimeWarning: invalid value encountered in scalar divide
+  likelihood = np.exp(-(measurement - mu)**2 /
+Traceback (most recent call last):
+  File "/var/lib/condor/execute/slot1/dir_3532936/./eval_cp.py", line 78, in <module>
+    accepted_order_dicts = conjugate_priors_alg.metropolis_hastings_with_conjugate_priors(
+  File "/var/lib/condor/execute/slot1/dir_3532936/conjugate_priors_alg.py", line 219, in metropolis_hastings_with_conjugate_priors
+    all_participant_ln_likelihood = compute_all_participant_ln_likelihood_and_update_participant_stages(
+  File "/var/lib/condor/execute/slot1/dir_3532936/conjugate_priors_alg.py", line 126, in compute_all_participant_ln_likelihood_and_update_participant_stages
+    sampled_stage = np.random.choice(
+  File "numpy/random/mtrand.pyx", line 994, in numpy.random.mtrand.RandomState.choice
+ValueError: probabilities contain NaN

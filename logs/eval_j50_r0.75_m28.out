@@ -1,0 +1,121 @@
+eval.sh started at Tue Oct  8 11:44:44 CDT 2024
+Running in directory: /var/lib/condor/execute/slot1/dir_3847675
+Running with arguments: 50 0.75 28
+Unpacking virtual environment...
+Some packages not found, attempting to install dependencies with force reinstall and no cache...
+Defaulting to user installation because normal site-packages is not writeable
+Collecting matplotlib==3.9.2
+  Downloading matplotlib-3.9.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (8.3 MB)
+Collecting numpy==2.0.2
+  Downloading numpy-2.0.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (19.5 MB)
+Collecting pandas==2.2.3
+  Downloading pandas-2.2.3-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (13.1 MB)
+Collecting scipy==1.13.1
+  Downloading scipy-1.13.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (38.6 MB)
+Collecting scikit-learn==1.5.2
+  Downloading scikit_learn-1.5.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (13.4 MB)
+Collecting seaborn==0.13.2
+  Downloading seaborn-0.13.2-py3-none-any.whl (294 kB)
+Collecting importlib-resources>=3.2.0
+  Downloading importlib_resources-6.4.5-py3-none-any.whl (36 kB)
+Collecting pyparsing>=2.3.1
+  Downloading pyparsing-3.1.4-py3-none-any.whl (104 kB)
+Collecting contourpy>=1.0.1
+  Downloading contourpy-1.3.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (321 kB)
+Collecting kiwisolver>=1.3.1
+  Downloading kiwisolver-1.4.7-cp39-cp39-manylinux_2_12_x86_64.manylinux2010_x86_64.whl (1.6 MB)
+Collecting pillow>=8
+  Downloading pillow-10.4.0-cp39-cp39-manylinux_2_28_x86_64.whl (4.5 MB)
+Collecting python-dateutil>=2.7
+  Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+Collecting packaging>=20.0
+  Downloading packaging-24.1-py3-none-any.whl (53 kB)
+Collecting fonttools>=4.22.0
+  Downloading fonttools-4.54.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (4.6 MB)
+Collecting cycler>=0.10
+  Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+Collecting pytz>=2020.1
+  Downloading pytz-2024.2-py2.py3-none-any.whl (508 kB)
+Collecting tzdata>=2022.7
+  Downloading tzdata-2024.2-py2.py3-none-any.whl (346 kB)
+Collecting threadpoolctl>=3.1.0
+  Downloading threadpoolctl-3.5.0-py3-none-any.whl (18 kB)
+Collecting joblib>=1.2.0
+  Downloading joblib-1.4.2-py3-none-any.whl (301 kB)
+Collecting zipp>=3.1.0
+  Downloading zipp-3.20.2-py3-none-any.whl (9.2 kB)
+Collecting six>=1.5
+  Downloading six-1.16.0-py2.py3-none-any.whl (11 kB)
+Installing collected packages: zipp, six, numpy, tzdata, pytz, python-dateutil, pyparsing, pillow, packaging, kiwisolver, importlib-resources, fonttools, cycler, contourpy, threadpoolctl, scipy, pandas, matplotlib, joblib, seaborn, scikit-learn
+  Attempting uninstall: zipp
+    Found existing installation: zipp 3.20.2
+    Uninstalling zipp-3.20.2:
+      Successfully uninstalled zipp-3.20.2
+  Attempting uninstall: six
+    Found existing installation: six 1.16.0
+    Uninstalling six-1.16.0:
+      Successfully uninstalled six-1.16.0
+  Attempting uninstall: numpy
+    Found existing installation: numpy 2.0.2
+    Uninstalling numpy-2.0.2:
+      Successfully uninstalled numpy-2.0.2
+  Attempting uninstall: tzdata
+    Found existing installation: tzdata 2024.2
+    Uninstalling tzdata-2024.2:
+      Successfully uninstalled tzdata-2024.2
+  Attempting uninstall: pytz
+    Found existing installation: pytz 2024.2
+    Uninstalling pytz-2024.2:
+      Successfully uninstalled pytz-2024.2
+  Attempting uninstall: python-dateutil
+    Found existing installation: python-dateutil 2.9.0.post0
+    Uninstalling python-dateutil-2.9.0.post0:
+      Successfully uninstalled python-dateutil-2.9.0.post0
+  Attempting uninstall: pyparsing
+    Found existing installation: pyparsing 3.1.4
+    Uninstalling pyparsing-3.1.4:
+      Successfully uninstalled pyparsing-3.1.4
+  Attempting uninstall: pillow
+    Found existing installation: pillow 10.4.0
+    Uninstalling pillow-10.4.0:
+      Successfully uninstalled pillow-10.4.0
+  Attempting uninstall: packaging
+    Found existing installation: packaging 24.1
+    Uninstalling packaging-24.1:
+      Successfully uninstalled packaging-24.1
+  Attempting uninstall: kiwisolver
+    Found existing installation: kiwisolver 1.4.7
+    Uninstalling kiwisolver-1.4.7:
+      Successfully uninstalled kiwisolver-1.4.7
+  Attempting uninstall: importlib-resources
+    Found existing installation: importlib-resources 6.4.5
+    Uninstalling importlib-resources-6.4.5:
+      Successfully uninstalled importlib-resources-6.4.5
+  Attempting uninstall: fonttools
+    Found existing installation: fonttools 4.54.1
+    Uninstalling fonttools-4.54.1:
+      Successfully uninstalled fonttools-4.54.1
+  Attempting uninstall: cycler
+    Found existing installation: cycler 0.12.1
+    Uninstalling cycler-0.12.1:
+      Successfully uninstalled cycler-0.12.1
+  Attempting uninstall: contourpy
+    Found existing installation: contourpy 1.3.0
+    Uninstalling contourpy-1.3.0:
+      Successfully uninstalled contourpy-1.3.0
+  Attempting uninstall: threadpoolctl
+    Found existing installation: threadpoolctl 3.5.0
+    Uninstalling threadpoolctl-3.5.0:
+      Successfully uninstalled threadpoolctl-3.5.0
+  Attempting uninstall: scipy
+    Found existing installation: scipy 1.13.1
+    Uninstalling scipy-1.13.1:
+      Successfully uninstalled scipy-1.13.1
+  Rolling back uninstall of scipy
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy-1.13.1.dist-info/
+   from /home/hhao9/.local/lib/python3.9/site-packages/~cipy-1.13.1.dist-info
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy.libs/
+   from /home/hhao9/.local/lib/python3.9/site-packages/~cipy.libs
+  Moving to /home/hhao9/.local/lib/python3.9/site-packages/scipy/
+   from /home/hhao9/.local/lib/python3.9/site-packages/~cipy
+Failed to install requirements
